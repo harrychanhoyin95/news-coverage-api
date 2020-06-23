@@ -6,6 +6,9 @@ import config from '../config';
 
 const newsapi = new NewsAPI(config.newsApiKey)
 
+export const businessNewsSource = 'bloomberg,business-insider,business-insider-uk,financial-post,fortune,the-wall-street-journal';
+export const techNewsSource = 'crypto-coins-news,engadget,hacker-news,recode,techcrunch,techradar,the-next-web,the-verge,wired';
+
 export default async() => {
   let businessData = []
   let techData = []
@@ -18,7 +21,7 @@ export default async() => {
         title: d.title,
         // description: d.description,
         url: d.url,
-        // urlToImage: d.urlToImage,
+        urlToImage: d.urlToImage,
         publishedAt: d.publishedAt,
         // content: d.content
       }
@@ -26,13 +29,13 @@ export default async() => {
   }
 
   const businessNewsData = await newsapi.v2.topHeadlines({
-    sources: 'bloomberg,business-insider,business-insider-uk,financial-post,fortune,the-wall-street-journal',
+    sources: businessNewsSource,
     language: 'en',
     pageSize: 100,
   }).then(response => response)
 
   const techNewsData = await newsapi.v2.topHeadlines({
-    sources: 'crypto-coins-news,engadget,hacker-news,recode,techcrunch,techradar,the-next-web,the-verge,wired',
+    sources: techNewsSource,
     language: 'en',
     pageSize: 100,
   }).then(response => response)
