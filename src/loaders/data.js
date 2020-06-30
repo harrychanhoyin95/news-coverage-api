@@ -1,18 +1,19 @@
 import NewsAPI from 'newsapi';
 import _ from 'lodash';
-import fs from 'fs'
+import fs from 'fs';
+import { v4 as uuidV4 } from 'uuid';
 
 import config from '../config';
 
-const newsapi = new NewsAPI(config.newsApiKey)
+const newsapi = new NewsAPI(config.newsApiKey);
 
 export const businessNewsSource = 'bloomberg,business-insider,business-insider-uk,financial-post,fortune,the-wall-street-journal';
 export const techNewsSource = 'crypto-coins-news,engadget,hacker-news,recode,techcrunch,techradar,the-next-web,the-verge,wired';
 
 export default async() => {
-  let businessData = []
-  let techData = []
-  let parsedNewsData = []
+  let businessData = [];
+  let techData = [];
+  let parsedNewsData = [];
 
   const parseNewsData = (newsData) => {
     return newsData.map(d => {
@@ -24,21 +25,21 @@ export default async() => {
         urlToImage: d.urlToImage,
         publishedAt: d.publishedAt,
         // content: d.content
-      }
-    })
-  }
+      };
+    });
+  };
 
   const businessNewsData = await newsapi.v2.topHeadlines({
     sources: businessNewsSource,
     language: 'en',
     pageSize: 100,
-  }).then(response => response)
+  }).then(response => response);
 
   const techNewsData = await newsapi.v2.topHeadlines({
     sources: techNewsSource,
     language: 'en',
     pageSize: 100,
-  }).then(response => response)
+  }).then(response => response);
 
   if (businessNewsData) {
     const { articles } = businessNewsData;
@@ -51,16 +52,17 @@ export default async() => {
   }
 
   if (businessNewsData && techData) {
-    parsedNewsData = [...businessData, ...techData]
-    parsedNewsData =  _.groupBy(parsedNewsData, 'source')
-    const orderedNewData = {}
+    parsedNewsData = [...businessData, ...techData];
+    parsedNewsData = parsedNewsData.map(d => _.set(d, "id", uuidV4()));
+    parsedNewsData =  _.groupBy(parsedNewsData, 'source');
+    const orderedNewData = {};
     Object.keys(parsedNewsData).sort().forEach((key) => {
       orderedNewData[key] = parsedNewsData[key];
-    })
+    });
 
     fs.writeFileSync('./src/data/newsData.json', JSON.stringify(orderedNewData), err => {
-      if (err) throw err
-      console.log("Updated!")
-    })
+      if (err) throw err;
+      console.log("Updated!");
+    });
   }
-}
+};

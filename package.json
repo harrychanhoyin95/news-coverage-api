@@ -17,6 +17,7 @@
     "newsapi": "^2.4.0",
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.4",
+    "uuid": "^8.2.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
