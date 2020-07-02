@@ -17,4 +17,5 @@ export default {
     prefix: '/api',
   },
   newsApiKey: process.env.NEWS_API_KEY,
+  databaseURL: process.env.DATABASE_URL,
 };
