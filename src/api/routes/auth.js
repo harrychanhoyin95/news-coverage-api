@@ -10,7 +10,21 @@ export default (app) => {
 
   route.post('/signUp', async(req, res, next) => {
     const { name, email, password } = req.body;
-    console.log("email", email);
-    await AuthServiceInstance.signUp({ name, email, password });
+    try {
+      const { user, token } = await AuthServiceInstance.signUp({ name, email, password });
+      return res.status(201).json({ user, token });
+    } catch (e) {
+      return next(e);
+    }
+  });
+
+  route.post('/signIn', async(req, res, next) => {
+    const { email, password } = req.body;
+    try {
+      const { user, token } = await AuthServiceInstance.signUp({ name, email, password });
+      return res.json({ user, token });
+    } catch (e) {
+      return next(e);
+    }
   });
 };

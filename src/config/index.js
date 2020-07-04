@@ -13,6 +13,7 @@ export default {
   logs: {
     level: process.env.LOG_LEVEL || 'silly',
   },
+  jwtSecret: process.env.JWT_SECRET,
   api: {
     prefix: '/api',
   },
