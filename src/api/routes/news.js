@@ -1,7 +1,12 @@
-import { Router } from 'express';
+import { Router, response } from 'express';
 import fs from 'fs';
 import _ from 'lodash';
 import moment from 'moment';
+import NewsAPI from 'newsapi';
+
+import config from '../../config';
+
+const newsapi = new NewsAPI(config.newsApiKey);
 
 import { businessNewsSource, techNewsSource } from "../../loaders/data";
 
@@ -23,6 +28,20 @@ export default (app) => {
 
     return res.json({
       data: newsData
+    });
+  });
+
+  route.get('/search', async(req, res) => {
+    const { keyword, sortBy } = req.query;
+    const searchResult = await newsapi.v2.everything({
+      q: keyword,
+      sortBy,
+      language: 'en',
+      pageSize: 100,
+    }).then(response => response);
+
+    return res.json({
+      data: searchResult.articles
     });
   });
 
