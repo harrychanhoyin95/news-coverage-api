@@ -2,6 +2,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
+import createError from 'http-errors';
 
 import UserModel from '../models/user';
 import config from '../config';
@@ -12,7 +13,7 @@ export default class AuthService {
     try {
       const user = await UserModel.findOne({ email });
       if (user) {
-        throw new Error("Email has been taken");
+        throw createError(409, "Email has been taken");
       }
 
       const salt = await new Promise((resolve, reject) => {
@@ -36,7 +37,7 @@ export default class AuthService {
         salt,
       });
       if (!userRecord) {
-        throw new Error('User cannot be created');
+        throw createError(500, 'User cannot be created');
       }
 
       const selectedFieldUser = _.pick(userRecord, ['name', 'email']);
@@ -49,11 +50,11 @@ export default class AuthService {
     }
   }
 
-  async signIn({ email, password }) {
+  async login({ email, password }) {
     try {
       const user = await UserModel.findOne({ email });
       if (!user) {
-        throw new Error("User not registered");
+        throw createError(404, "User not registered");
       }
 
       const isCorrectPassword = await new Promise((resolve, reject) => {
@@ -64,7 +65,7 @@ export default class AuthService {
       });
 
       if (!isCorrectPassword) {
-        throw new Error("Invalid Password");
+        throw createError(409, "Invalid Password");
       }
 
       const selectedFieldUser = _.pick(user, ['name', 'email']);

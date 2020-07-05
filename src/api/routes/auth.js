@@ -18,10 +18,10 @@ export default (app) => {
     }
   });
 
-  route.post('/signIn', async(req, res, next) => {
+  route.post('/login', async(req, res, next) => {
     const { email, password } = req.body;
     try {
-      const { user, token } = await AuthServiceInstance.signUp({ name, email, password });
+      const { user, token } = await AuthServiceInstance.login({ email, password });
       return res.json({ user, token });
     } catch (e) {
       return next(e);
