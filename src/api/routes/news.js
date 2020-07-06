@@ -1,4 +1,4 @@
-import { Router, response } from 'express';
+import { Router } from 'express';
 import fs from 'fs';
 import _ from 'lodash';
 import moment from 'moment';
