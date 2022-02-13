@@ -23,7 +23,7 @@
     "moment": "^2.27.0",
     "mongoose": "^5.9.21",
     "newsapi": "^2.4.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "nodemon": "^2.0.4",
     "uuid": "^8.2.0",
     "winston": "^3.2.1"
